@@ -78,29 +78,6 @@ RegisterCommand('adminpay', function (source, args)
     end
 end)
 
-RegisterCommand('banktransfer', function (source, args)
-    if args[1] == nil or args[2] == nil then
-        TriggerClientEvent('chatMessage', source, "", {255, 0, 0}, "^3 Missing Parameter! ^7 | Example: /banktransfer ID amount")
-        return
-    end
-    if GetPlayerPing(args[1]) ~= 0 then
-        local amount = tonumber(args[2])
-        if amount < 1 then    
-            TriggerClientEvent('chatMessage', source, "", {255, 0, 0}, "^3 The minimum amount to transfer is: ^7^*$1")      
-        else
-            if RemoveMoney(source, "bank", amount) then
-                AddMoney(args[1], "bank", amount)
-                TriggerClientEvent('chatMessage', source, "", {255, 0, 0}, "^3 You have transfered: ^7^* $" .. amount .. " ^7 to " .. GetPlayerName(args[1]))   
-                TriggerClientEvent('chatMessage', args[1], "", {255, 0, 0}, "^3 You have received: ^7^*$" .. amount .. " ^7 from " .. GetPlayerName(source))
-            else
-                TriggerClientEvent('chatMessage', source, "", {255, 0, 0}, "^3 Not enough money!")
-            end
-        end
-    else
-        TriggerClientEvent('chatMessage', source, "", {255, 0, 0}, "^3 Unknown Player. ^7 Example: /banktransfer ID amount")
-    end
-end)
-
 RegisterCommand('deposit', function (source, args)
     if args[1] == nil then
         TriggerClientEvent('chatMessage', source, "", {255, 0, 0}, "^3 Missing Parameter! | ^7 Example: /deposit amount")
