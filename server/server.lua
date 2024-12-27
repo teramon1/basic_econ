@@ -13,41 +13,6 @@ local govmoney = {
 RegisterCommand("bankinfo", function(source, args)
     TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, " ^*^_Bank Commands:")
     TriggerClientEvent('chatMessage', source, "", {255, 0, 0}, " ^2/pay ^7ID Amount")
-    TriggerClientEvent('chatMessage', source, "", {255, 0, 0}, " ^2/adminpay ^7ID Amount")
-    TriggerClientEvent('chatMessage', source, "", {255, 0, 0}, " ^2/serverbalance")
-    TriggerClientEvent('chatMessage', source, "", {255, 0, 0}, " ^2/balance ^7or ^2/balance ^7id")
-    TriggerClientEvent('chatMessage', source, "", {255, 0, 0}, " ^2/deposit ^7amount")
-    TriggerClientEvent('chatMessage', source, "", {255, 0, 0}, " ^2/withdraw ^7amount")
-end)
-
-RegisterCommand("balance", function(source, args)
-    if args[1] == nil then
-        local userdata = GetUserData(source)
-        TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 Player Name: ^7" .. GetPlayerName(source))
-        TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 Cash Balance: ^7^* $" .. format_thousand(userdata.cash))
-        TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 Bank Balance: ^7^* $" .. format_thousand(userdata.bank))
-    else
-        if GetPlayerPing(args[1]) ~= 0 then
-            local userdata = GetUserData(args[1])
-            TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 Player Name: ^7" .. GetPlayerName(source))
-            TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 Cash Balance: ^7^* $" .. format_thousand(userdata.cash))
-            TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 Bank Balance: ^7^* $" .. format_thousand(userdata.bank))
-        else 
-            TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^7 Unknown Player. Example: /balance ID")        
-        end
-    end
-end)
-
-RegisterCommand("serverbalance", function(source, args)
-    local cash = 0
-    local bank = 0
-    for k, v in pairs(ReadFile('data')) do
-        cash = cash + v.cash
-        bank = bank + v.bank
-    end
-    TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 Total Server Balance:")
-    TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 Cash Balance: ^7^*$" .. format_thousand(cash))
-    TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 Bank Balance: ^7^*$" .. format_thousand(bank))
 end)
 
 RegisterCommand('pay', function (source, args)
@@ -85,50 +50,6 @@ RegisterCommand('adminpay', function (source, args)
         end
     else
         TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 You do not have permission to use ^7^* /adminpay")
-    end
-end)
-
-RegisterCommand('deposit', function (source, args)
-    if args[1] == nil then
-        TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 Missing Parameter! | ^7 Example: /deposit amount")
-        return
-    end
-    if GetPlayerPing(source) ~= 0 then
-        local amount = tonumber(args[1])
-        if amount < 1 then
-            TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 The minimum amount to transfer is: ^7^* $1")        
-        else
-            if RemoveMoney(source, "cash", amount) then
-                AddMoney(source, "bank", amount) 
-                TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 You have deposited: ^7^* $" .. amount .. " to the bank ")  
-            else 
-                TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 Not enough money!")
-            end
-        end
-    else
-        TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 Unknown Player. | ^7 Example: /deposit amount")
-    end
-end)
-
-RegisterCommand('withdraw', function (source, args)
-    if args[1] == nil then
-        TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 Missing Parameter! ^7 | Example: /withdraw amount")
-        return
-    end
-    if GetPlayerPing(source) ~= 0 then
-        local amount = tonumber(args[1])
-        if amount < 1 then  
-            TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 The minimum amount to withdraw is: ^7^*$1")      
-        else
-            if RemoveMoney(source, "bank", amount) then
-                AddMoney(source, "cash", amount)
-                TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 You have withdrawn: ^7^* $" .. amount .. " ^7 to your pocket!")   
-            else 
-                TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 Not enough money!")
-            end
-        end
-    else
-        TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 Unknown Player. ^7 Example: /withdraw amount")
     end
 end)
 
@@ -174,9 +95,33 @@ AddEventHandler("playerConnecting", function(name, setReason, deferrals)
 	end
 end)
 
+RegisterServerEvent("customDeposit")
+AddEventHandler("customDeposit", function(amount)
+    local src = source
+    if RemoveMoney(src, "cash", amount) then
+        AddMoney(src, "bank", amount)
+        TriggerClientEvent("updateClientMoney", src, "cash", GetUserData(src).cash)
+        TriggerClientEvent("updateClientMoney", src, "bank", GetUserData(src).bank)
+    else
+        TriggerClientEvent('chatMessage', src, "^1Not enough cash!")
+    end
+end)
+
+RegisterServerEvent("customWithdraw")
+AddEventHandler("customWithdraw", function(amount)
+    local src = source
+    if RemoveMoney(src, "bank", amount) then
+        AddMoney(src, "cash", amount)
+        TriggerClientEvent("updateClientMoney", src, "cash", GetUserData(src).cash)
+        TriggerClientEvent("updateClientMoney", src, "bank", GetUserData(src).bank)
+    else
+        TriggerClientEvent('chatMessage', src, "^1Not enough money in the bank!")
+    end
+end)
+
 RegisterNetEvent("weeklyPayment")
 AddEventHandler("weeklyPayment", function()
-    local money = math.random(Config.UnemploymentPayRange)
+    local money = math.random(15,110)
     local taxed = money - (money * (taxes.income / 100))
     AddMoney(source, "bank", taxed)
     govmoney.taxes = govmoney.taxes + (money - taxed)

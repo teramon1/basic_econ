@@ -9,10 +9,19 @@
     text-align: left;
 }
 
-
 #cash, #bank {
     margin: 5px 0;
 }
 
+#bankControls {
+    position: absolute;
+    bottom: 250px;
+    left: 15px;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    font-family: sans-serif;
+    display: none; /* Hidden by default */
+}
 
 /*background: rgba(0, 0, 0, 0.5);*/
