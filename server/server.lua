@@ -176,7 +176,7 @@ end)
 
 RegisterNetEvent("weeklyPayment")
 AddEventHandler("weeklyPayment", function()
-    local money = math.random(15,450)
+    local money = math.random(Config.UnemploymentPayRange)
     local taxed = money - (money * (taxes.income / 100))
     AddMoney(source, "cash", taxed)
     govmoney.taxes = govmoney.taxes + (money - taxed)
