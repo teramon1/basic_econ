@@ -13,32 +13,36 @@ window.addEventListener("message", (event) => {
 
 document.getElementById("deposit").addEventListener("click", function () {
     const amount = parseInt(document.getElementById("amount").value);
-    if (amount && amount > 0) {
-        fetch(`https://${GetParentResourceName()}/depositMoney`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ amount }),
-        });
-    } else {
-        alert("Enter a valid amount!");
+    if (!amount || amount <= 0) {
+        alert("Please enter a valid amount.");
+        return;
     }
+    fetch(`https://${GetParentResourceName()}/depositMoney`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ amount }),
+    }).then(() => {
+        document.getElementById("amount").value = 1;
+    });
 });
 
 document.getElementById("withdraw").addEventListener("click", function () {
     const amount = parseInt(document.getElementById("amount").value);
-    if (amount && amount > 0) {
-        fetch(`https://${GetParentResourceName()}/withdrawMoney`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ amount }),
-        });
-    } else {
-        alert("Enter a valid amount!");
+    if (!amount || amount <= 0) {
+        alert("Please enter a valid amount.");
+        return;
     }
+    fetch(`https://${GetParentResourceName()}/withdrawMoney`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ amount }),
+    }).then(() => {
+        document.getElementById("amount").value = 1;
+    });
 });
 
 document.getElementById("close").addEventListener("click", function () {
