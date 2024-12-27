@@ -1,0 +1,18 @@
+#moneyDisplay {
+    position: absolute;
+    bottom: 200px;
+    left: 20px;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: sans-serif;
+    text-align: left;
+}
+
+
+#cash, #bank {
+    margin: 5px 0;
+}
+
+
+/*background: rgba(0, 0, 0, 0.5);*/
