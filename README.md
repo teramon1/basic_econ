@@ -7,17 +7,13 @@ FiveM Economy/Banking storing data via SteamID in JSON format. Original Creator:
 * Pay Players
 * Admin Pay Players
 * Tax
-* Bad Lua
+* Okayish Lua
 * Automatic Payments
 * Cash
-* Bank Commands
+* Bank/ATM NUI
 * Money HUD/NUI
 
 ## Commands
 * /bankinfo
 * /pay ID Amount
 * /adminpay ID Amount
-* /serverbalance
-* /balance or /balance id
-* /deposit amount
-* /withdraw amount
