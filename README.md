@@ -18,3 +18,7 @@ FiveM Economy/Banking storing data via SteamID in JSON format. Original Creator:
 * /bankinfo
 * /pay ID Amount
 * /adminpay ID Amount
+
+## Screenshots
+![Screenshot 2024-12-28 223244](https://github.com/user-attachments/assets/6102af3e-fca7-4eca-a8b2-95c2d949a59b)
+![Screenshot 2024-12-28 223312](https://github.com/user-attachments/assets/5c109d3c-03f0-40dc-a613-df97c4658d51)
