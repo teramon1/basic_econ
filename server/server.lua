@@ -39,45 +39,26 @@ RegisterCommand('pay', function (source, args)
 end)
 
 AddEventHandler("playerConnecting", function(name, setReason, deferrals)
-    if string.find(GetPlayerIdentifiers(source)[1], "steam:") then
-        local user = source
-        local data = ReadFile('data')
-        local count = 0
-        local found = false
+    local user = source
+    local identifiers = GetPlayerIdentifiers(user)
     
-        for k, v in pairs(data) do
-            count = count + 1
-            if v.steamid == GetPlayerIdentifiers(user)[1] then
-                found = true
-            end
-        end
-    
-        if not found then
-            count = count + 1
-            local userinfo = {
-                ["name"] = GetPlayerName(user),
-                ["steamid"] = GetPlayerIdentifiers(user)[1],
-                ["cash"] = Config.StartingCash,
-                ["bank"] = Config.StartingBank,
-            }
-            table.insert(data, userinfo)
-            WriteFile('data', data)
-        end
-    
-        if count == 0 then
-            local userinfo = {
-                ["name"] = GetPlayerName(user),
-                ["steamid"] = GetPlayerIdentifiers(user)[1],
-                ["cash"] = 0,
-                ["bank"] = 0,
-            }
-            table.insert(data, userinfo)
-            WriteFile('data', data)
-        end
-	else 
-		setReason("Error! | Steam is required to play on this special FiveM server!!")
-		CancelEvent()
-	end
+    if not identifiers or not identifiers[1] or not identifiers[1]:find("steam:") then
+        setReason("Steam is required to play on this server.")
+        CancelEvent()
+        return
+    end
+
+    local steamid = identifiers[1]
+    local userData = ReadPlayerFile(steamid)
+    if not userData then
+        userData = {
+            name = GetPlayerName(user),
+            steamid = steamid,
+            cash = Config.StartingCash,
+            bank = Config.StartingBank,
+        }
+        WritePlayerFile(steamid, userData)
+    end
 end)
 
 RegisterNetEvent("requestPlayerMoney")
@@ -153,93 +134,23 @@ AddEventHandler('chat:init', function()
 end)
 
 function AddMoney(user, type, amount)
-    amount = tonumber(amount)
-    if user == "self" then
-        user = source
-    end
     local userdata = GetUserData(user)
-    local data = ReadFile('data')
-    if type == "bank" then
-        local newuserdata = {
-            ["name"] = GetPlayerName(user),
-            ["steamid"] = GetPlayerIdentifiers(user)[1],
-            ["cash"] = userdata.cash,
-            ["bank"] = math.floor(userdata.bank + amount),
-        }
-        for k, v in pairs(data) do
-            if v.steamid == userdata.steamid then
-                table.remove(data, k)
-                table.insert(data, newuserdata)
-                WriteFile('data', data)
-            end
-        end
-        TriggerClientEvent("updateClientMoney", user, "bank", GetUserData(user).bank)  
-    else
-        local newuserdata = {
-            ["name"] = GetPlayerName(user),
-            ["steamid"] = GetPlayerIdentifiers(user)[1],
-            ["cash"] = math.floor(userdata.cash + amount),
-            ["bank"] = userdata.bank,
-        }
-        for k, v in pairs(data) do
-            if v.steamid == userdata.steamid then
-                table.remove(data, k)
-                table.insert(data, newuserdata)
-                WriteFile('data', data)
-            end
-        end
-        TriggerClientEvent("updateClientMoney", user, "cash", GetUserData(user).cash)  
+    if userdata then
+        userdata[type] = math.floor(userdata[type] + amount)
+        UpdateUserData(user, userdata)
+        TriggerClientEvent("updateClientMoney", user, type, userdata[type])
     end
 end
 
 function RemoveMoney(user, type, amount)
-    amount = tonumber(amount)
-    if user == "self" then
-        user = source
-    end
     local userdata = GetUserData(user)
-    local data = ReadFile('data')
-    if type == "bank" then
-        if userdata.bank < amount then
-            return false
-        else
-            local newuserdata = {
-                ["name"] = GetPlayerName(user),
-                ["steamid"] = GetPlayerIdentifiers(user)[1],
-                ["cash"] = userdata.cash,
-                ["bank"] = math.floor(userdata.bank - amount),
-            }
-            for k, v in pairs(data) do
-                if v.steamid == userdata.steamid then
-                    table.remove(data, k)
-                    table.insert(data, newuserdata)
-                    WriteFile('data', data)
-                end
-            end
-            TriggerClientEvent("updateClientMoney", user, "bank", GetUserData(user).bank)  
-            return true
-        end
-    else
-        if userdata.cash < amount then
-            return false
-        else
-            local newuserdata = {
-                ["name"] = GetPlayerName(user),
-                ["steamid"] = GetPlayerIdentifiers(user)[1],
-                ["cash"] = math.floor(userdata.cash - amount),
-                ["bank"] = userdata.bank,
-            }
-            for k, v in pairs(data) do
-                if v.steamid == userdata.steamid then
-                    table.remove(data, k)
-                    table.insert(data, newuserdata)
-                    WriteFile('data', data)
-                end
-            end
-            TriggerClientEvent("updateClientMoney", user, "cash", GetUserData(user).cash)  
-            return true
-        end
+    if userdata and userdata[type] >= amount then
+        userdata[type] = math.floor(userdata[type] - amount)
+        UpdateUserData(user, userdata)
+        TriggerClientEvent("updateClientMoney", user, type, userdata[type])
+        return true
     end
+    return false
 end
 
 RegisterNetEvent("updateClientTaxesServer")
@@ -268,34 +179,44 @@ function AddGovBalance(type, amount)
     end
 end
 
+local resource = GetCurrentResourceName()
+
+function ReadPlayerFile(steamid)
+    local safeSteamID = steamid:gsub(":", "_")
+    local data = LoadResourceFile(resource, 'userdata/' .. safeSteamID .. '.json')
+    if data then
+        return json.decode(data)
+    else
+        return nil
+    end
+end
+
+function WritePlayerFile(steamid, data)
+    local safeSteamID = steamid:gsub(":", "_")
+    SaveResourceFile(resource, 'userdata/' .. safeSteamID .. '.json', json.encode(data), -1)
+end
+
 function GetUserData(user)
     if user == "self" then
         user = source
     end
-    local returndata = nil
-    for k, v in pairs(ReadFile('data')) do
-        if v.steamid == GetPlayerIdentifiers(user)[1] then
-            returndata = v
-        end
+
+    local identifiers = GetPlayerIdentifiers(user)
+    if not identifiers or not identifiers[1] then
+        print("Error: Could not retrieve SteamID for user " .. tostring(user))
+        return nil
     end
-    return returndata
+
+    local steamid = identifiers[1]
+    return ReadPlayerFile(steamid)
 end
 
-function ReadFile(file)
-    local data = LoadResourceFile(resource, 'userdata/' .. file .. '.json')
-    if data then
-        return json.decode(data)
-    else
-        return false
+function UpdateUserData(user, data)
+    if user == "self" then
+        user = source
     end
-end
-
-function WriteFile(file, data)
-    SaveResourceFile(resource, 'userdata/' .. file .. '.json', json.encode(data), -1)
-end
-
-if not ReadFile('data') then
-    WriteFile('data', {})
+    local steamid = GetPlayerIdentifiers(user)[1]
+    WritePlayerFile(steamid, data)
 end
 
 function format_thousand(v)
