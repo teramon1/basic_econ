@@ -1,5 +1,5 @@
 ## Basic Economy
-FiveM Economy/Banking storing data via SteamID in JSON format (Which means **no MySQL or external databases**). Original Creator: https://github.com/CADOJRP/FiveM-Banking (I redid some of it and used some of the old code)
+FiveM Economy/Banking storing data via SteamID in JSON format (Which means **no MySQL or external databases**). Original Creator: https://github.com/CADOJRP/FiveM-Banking
 
 ## Features
 * Saves players data into JSON files
