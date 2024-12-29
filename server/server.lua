@@ -64,7 +64,7 @@ end)
 RegisterServerEvent("automaticPayment")
 AddEventHandler("automaticPayment", function()
     local src = source
-    local amount = 110
+    local amount = Config.AutoPayment
     AddMoney(src, "bank", amount)
     TriggerClientEvent('chat:addMessage', src, { args = { Config.ServerName, " ^2You have received an automatic payment of $" .. amount .. "." } })
 end)
