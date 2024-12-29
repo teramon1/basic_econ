@@ -19,6 +19,7 @@ FiveM Economy/Banking storing data via SteamID in JSON format (Which means **no 
 ## INSTALLATION
 * Download a .zip copy or git clone it to your VPS
 * Put it in your **Resources** folder, in a location of your choice, and name it whatever
+* go into the userdata folder and delete the delete-me
 * Edit the Config if needed
 * Start the script in your **server.cfg** by doing **ensure** *script name* or **start** *script name*
 
