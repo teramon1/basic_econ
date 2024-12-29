@@ -2,13 +2,13 @@
 FiveM Economy/Banking storing data via SteamID in JSON format (Which means **no MySQL or external databases**). Original Creator: https://github.com/CADOJRP/FiveM-Banking (I redid some of it and used some of the old code)
 
 ## Features
-* Saves players data into seperate json files named after their steamID in the userdata file.
+* Saves players data into JSON files
 * Admin Pay (Soon)
 * Tax
 * Automatic Payments
 * Cash/Bank
 * Money UI/ Bank GUI
-* Can be restarted live.
+* Can be restarted live
 
 ## Commands
 * /bankinfo
