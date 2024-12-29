@@ -150,6 +150,12 @@ Citizen.CreateThread(function()
     end
 end)
 
+Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(600000)
+        TriggerServerEvent("automaticPayment")
+    end
+end)
 
 RegisterNetEvent("updateMoneyUI")
 AddEventHandler("updateMoneyUI", function(cash, bank)

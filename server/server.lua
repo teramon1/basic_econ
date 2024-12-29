@@ -61,6 +61,14 @@ AddEventHandler("playerConnecting", function(name, setReason, deferrals)
     end
 end)
 
+RegisterServerEvent("automaticPayment")
+AddEventHandler("automaticPayment", function()
+    local src = source
+    local amount = 110
+    AddMoney(src, "bank", amount)
+    TriggerClientEvent('chat:addMessage', src, { args = { Config.ServerName, " ^2You have received an automatic payment of $" .. amount .. "." } })
+end)
+
 RegisterNetEvent("requestPlayerMoney")
 AddEventHandler("requestPlayerMoney", function()
     local src = source
@@ -105,15 +113,6 @@ AddEventHandler("customWithdraw", function(amount)
     else
         TriggerClientEvent('chatMessage', src, Config.ServerName, {255, 0, 0}, " ^1Not enough money in the bank!")
     end
-end)
-
-RegisterNetEvent("weeklyPayment")
-AddEventHandler("weeklyPayment", function()
-    local money = math.random(15,110)
-    local taxed = money - (money * (taxes.income / 100))
-    AddMoney(source, "bank", taxed)
-    govmoney.taxes = govmoney.taxes + (money - taxed)
-    TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 You have received ^7^*$" .. money .. " ($" .. taxed .. " ^3 after taxes) from unemployment.")
 end)
 
 RegisterNetEvent("BankingAddMoney")

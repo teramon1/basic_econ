@@ -3,9 +3,19 @@ game 'gta5'
 
 author 'blurry'
 
-client_script 'client/client.lua'
-server_script 'server/server.lua'
-shared_script 'config.lua'
+client_scripts {
+    'client/client.lua',
+    'jobs/**/cl_deliveryjob.lua'
+}
+
+server_script {
+    'server/server.lua',
+    'jobs/**/sv_deliveryjob.lua'
+}
+
+shared_scripts {
+    'config.lua',
+}
 
 ui_page 'html/index.html'
 
