@@ -10,8 +10,9 @@ FiveM Economy/Banking storing data via SteamID in JSON format. Original Creator:
 * Okayish Lua
 * Automatic Payments
 * Cash
-* Bank/ATM NUI
-* Money HUD/NUI
+* Simplistic but Nice looking Bank/ATM GUI/System
+* Money HUD/UI
+* Can be restarted live without losing functionability anywhere since it uses a JSON as the database.
 
 ## Commands
 * /bankinfo
