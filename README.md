@@ -5,7 +5,6 @@ FiveM Economy/Banking storing data via SteamID in JSON format. Original Creator:
 
 ## Features
 * Pay Players
-* Admin Pay Players
 * Tax
 * Okayish Lua
 * Automatic Payments
