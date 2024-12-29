@@ -1,9 +1,8 @@
-## There is an issue with the script which is that the script stores all the userdata in one json file. This causes the server to crash once you have a lot of people in the json file. The fix for it was to create different files for each person. **I will add this soon as just a overall thing so no one has to do it manually**
-
 ## Basic Economy
 FiveM Economy/Banking storing data via SteamID in JSON format (Which means **no MySQL or external databases**). Original Creator: https://github.com/CADOJRP/FiveM-Banking (I redid some of it and used some of the old code)
 
 ## Features
+* Saves players data into seperate json files named after their steamID in the userdata file.
 * Pay Players
 * Tax
 * Okayish Lua
