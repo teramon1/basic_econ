@@ -103,15 +103,18 @@ html, body {
 
 .hud {
     position: fixed;
-    bottom: 200px;
-    left: 20px;
-    padding: 10px;
+    bottom: 220px;
+    left: 30px;
+    padding: 7px;
     text-align: left;
     z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.55);
+    border-radius: 8px;
 }
 
 .hud-item {
     margin-bottom: 5px;
     font-size: 1rem;
-    color: white;
+    font-weight: bold;
+    color: rgb(255, 255, 255);
 }
