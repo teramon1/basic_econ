@@ -5,12 +5,10 @@ author 'blurry'
 
 client_scripts {
     'client/client.lua',
-    'jobs/**/cl_deliveryjob.lua'
 }
 
 server_script {
     'server/server.lua',
-    'jobs/**/sv_deliveryjob.lua'
 }
 
 shared_scripts {
