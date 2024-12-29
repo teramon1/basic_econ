@@ -38,21 +38,6 @@ RegisterCommand('pay', function (source, args)
     end
 end)
 
-RegisterCommand('adminpay', function (source, args)
-	if IsPlayerAceAllowed(source, "command.adminpay") then
-        if GetPlayerPing(args[1]) ~= 0 then
-            local amount = tonumber(args[2])
-            AddMoney(args[1], "cash", amount)
-            TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 You have admin paided ^7^* $" .. amount .. " ^7 to " .. GetPlayerName(args[1]))     
-            TriggerClientEvent('chatMessage', args[1], Config.ServerName, {255, 0, 0}, "^3 You have received ^7^* $" .. amount .. " ^7 from " .. GetPlayerName(source))
-        else
-            TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 Unknown Player. | ^7 Example: /pay ID amount")
-        end
-    else
-        TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, "^3 You do not have permission to use ^7^* /adminpay")
-    end
-end)
-
 AddEventHandler("playerConnecting", function(name, setReason, deferrals)
     if string.find(GetPlayerIdentifiers(source)[1], "steam:") then
         local user = source
