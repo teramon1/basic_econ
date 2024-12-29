@@ -101,6 +101,8 @@ local bankLocations = {
 	vector3(-1282.54, -210.45, 42.45),
 }
 
+local cash = 0
+local bank = 0
 local interactionRadius = 1.5
 local controlsVisible = false
 
@@ -117,13 +119,69 @@ local function isPlayerNearBank()
     return false
 end
 
-local function toggleControls(show)
-    SendNUIMessage({
-        action = show and "showControls" or "hideControls",
-    })
+local function toggleBankNUI(show)
+    if show then
+        SendNUIMessage({ action = "showBankUI" })
+        SetNuiFocus(true, true)
+        TriggerServerEvent("getPlayerMoney")
+    else
+        SendNUIMessage({ action = "hideBankUI" })
+        SetNuiFocus(false, false)
+    end
     controlsVisible = show
-    SetNuiFocus(show, show)
 end
+
+RegisterNetEvent("updateHUD")
+AddEventHandler("updateHUD", function(newCash, newBank)
+    cash = newCash
+    bank = newBank
+
+    SendNUIMessage({
+        action = "updateHUD",
+        cash = cash,
+        bank = bank
+    })
+end)
+
+Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(1000)
+        TriggerServerEvent("requestPlayerMoney")
+    end
+end)
+
+
+RegisterNetEvent("updateMoneyUI")
+AddEventHandler("updateMoneyUI", function(cash, bank)
+    SendNUIMessage({
+        action = "updateMoney",
+        cash = cash,
+        bank = bank
+    })
+end)
+
+Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(0)
+
+        if isPlayerNearBank() then
+            SetTextComponentFormat("STRING")
+            AddTextComponentString("Press ~INPUT_CONTEXT~ to access the Bank/ATM.")
+            DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+
+            if IsControlJustPressed(1, 51) and not controlsVisible then
+                toggleBankNUI(true)
+            end
+        elseif controlsVisible then
+            toggleBankNUI(false)
+        end
+    end
+end)
+
+RegisterNUICallback("close", function(data, cb)
+    toggleBankNUI(false)
+    cb("ok")
+end)
 
 local function createBankBlips()
     for _, location in ipairs(bankLocations) do
@@ -139,27 +197,15 @@ local function createBankBlips()
     end
 end
 
-Citizen.CreateThread(function()
-    while true do
-        Citizen.Wait(0)
-
-        if isPlayerNearBank() then
-            SetTextComponentFormat("STRING")
-            AddTextComponentString("Press ~INPUT_CONTEXT~ to access the Bank/ATM.")
-            DisplayHelpTextFromStringLabel(0, 0, 1, -1)
-
-            if IsControlJustPressed(1, 51) and not controlsVisible then
-                toggleControls(true)
-            end
-        elseif controlsVisible then
-            toggleControls(false)
-        end
-    end
+RegisterNetEvent("openBankUI")
+AddEventHandler("openBankUI", function()
+    SendNUIMessage({ action = "showBankUI" })
+    SetNuiFocus(true, true)
 end)
 
-RegisterNUICallback("close", function(data, cb)
-    toggleControls(false)
-    cb("ok")
+RegisterNUICallback("close", function()
+    SendNUIMessage({ action = "hideBankUI" })
+    SetNuiFocus(false, false)
 end)
 
 RegisterNUICallback("depositMoney", function(data, cb)

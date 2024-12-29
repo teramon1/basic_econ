@@ -3,21 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Money Display</title>
+    <title>Banking Interface</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="moneyDisplay">
-        <div id="cash">Cash: $0</div>
-        <div id="bank">Bank: $0</div>
+    <div id="hud" class="hud">
+        <div class="hud-item">
+            <span>Cash: </span>
+            <span id="hud-cash">$0</span>
+        </div>
+        <div class="hud-item">
+            <span>Bank: </span>
+            <span id="hud-bank">$0</span>
+        </div>
+    </div>    
+    <div class="bank-ui">
+        <div class="balance-display">
+            <div class="balance-item">
+                <span class="label">Cash:</span>
+                <span id="cash" class="value">$0</span>
+            </div>
+            <div class="balance-item">
+                <span class="label">Bank:</span>
+                <span id="bank" class="value">$0</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <input type="number" id="amount" placeholder="Enter Amount" min="1" value="1"/>
+            <div class="button-group">
+                <button id="deposit" class="button">Deposit</button>
+                <button id="withdraw" class="button">Withdraw</button>
+                <button id="close" class="button close-btn">Close</button>
+            </div>
+        </div>
     </div>
-    
-    <div id="bankControls" style="display: none;">
-        <input type="number" id="amount" placeholder="Enter Amount" value="1" />
-        <button id="deposit">Deposit</button>
-        <button id="withdraw">Withdraw</button>
-        <button id="close">Close</button>
-    </div>            
     <script src="script.js"></script>
 </body>
 </html>

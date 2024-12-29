@@ -1,27 +1,117 @@
-#moneyDisplay {
-    position: absolute;
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background: transparent;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+    display: none;
+}
+
+.bank-ui {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 12px;
+    padding: 20px;
+    width: 300px;
+    max-width: 90%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    text-align: center;
+    color: white;
+}
+
+.balance-display {
+    margin-bottom: 20px;
+}
+
+.balance-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.controls h2 {
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.controls input {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    text-align: center;
+    color: black;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    color: black;
+}
+
+.button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.close-btn {
+    background: #e74c3c;
+    color: black;
+}
+
+.close-btn:hover {
+    background: #c0392b;
+}
+
+.hud {
+    position: fixed;
     bottom: 200px;
     left: 20px;
-    color: white;
     padding: 10px;
-    border-radius: 5px;
-    font-family: sans-serif;
     text-align: left;
+    z-index: 9999;
 }
 
-#cash, #bank {
-    margin: 5px 0;
-}
-
-#bankControls {
-    position: absolute;
-    bottom: 250px;
-    left: 15px;
+.hud-item {
+    margin-bottom: 5px;
+    font-size: 1rem;
     color: white;
-    padding: 15px;
-    border-radius: 5px;
-    font-family: sans-serif;
-    display: none; /* Hidden by default */
 }
-
-/*background: rgba(0, 0, 0, 0.5);*/

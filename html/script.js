@@ -1,69 +1,64 @@
+const bankUI = document.querySelector(".bank-ui");
+const overlay = document.getElementById("overlay");
+const closeButton = document.getElementById("close");
+
+function toggleBankUI(show) {
+    if (show) {
+        bankUI.style.display = "block";
+        overlay.style.display = "block";
+    } else {
+        bankUI.style.display = "none";
+        overlay.style.display = "none";
+    }
+}
+
+document.getElementById("deposit").addEventListener("click", () => {
+    const amount = parseInt(document.getElementById("amount").value);
+    if (amount > 0) {
+        fetch(`https://${GetParentResourceName()}/depositMoney`, {
+            method: "POST",
+            body: JSON.stringify({ amount: amount }),
+        }).catch((err) => console.error("Deposit error:", err));
+    } else {
+        alert("Enter a valid amount to deposit!");
+    }
+});
+
+document.getElementById("withdraw").addEventListener("click", () => {
+    const amount = parseInt(document.getElementById("amount").value);
+    if (amount > 0) {
+        fetch(`https://${GetParentResourceName()}/withdrawMoney`, {
+            method: "POST",
+            body: JSON.stringify({ amount: amount }),
+        }).catch((err) => console.error("Withdraw error:", err));
+    } else {
+        alert("Enter a valid amount to withdraw!");
+    }
+});
+
+closeButton.addEventListener("click", () => {
+    fetch(`https://${GetParentResourceName()}/close`, {
+        method: "POST",
+        body: JSON.stringify({}),
+    });
+});
+
+window.addEventListener("message", (event) => {
+    if (event.data.action === "updateMoney") {
+        document.getElementById("cash").textContent = `$${event.data.cash}`;
+        document.getElementById("bank").textContent = `$${event.data.bank}`;
+    } else if (event.data.action === "showBankUI") {
+        document.querySelector(".bank-ui").style.display = "block";
+    } else if (event.data.action === "hideBankUI") {
+        document.querySelector(".bank-ui").style.display = "none";
+    }
+});
+
 window.addEventListener("message", (event) => {
     const data = event.data;
 
-    if (data.action === "updateCash") {
-        document.getElementById("cash").innerText = `Cash: $${data.amount.toLocaleString()}`;
-    } else if (data.action === "updateBank") {
-        document.getElementById("bank").innerText = `Bank: $${data.amount.toLocaleString()}`;
-    } else if (data.action === "toggleDisplay") {
-        const display = document.getElementById("moneyDisplay");
-        display.style.display = display.style.display === "none" ? "block" : "none";
-    }
-});
-
-document.getElementById("deposit").addEventListener("click", function () {
-    const amount = parseInt(document.getElementById("amount").value);
-    if (!amount || amount <= 0) {
-        alert("Please enter a valid amount.");
-        return;
-    }
-    fetch(`https://${GetParentResourceName()}/depositMoney`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ amount }),
-    }).then(() => {
-        document.getElementById("amount").value = 1;
-    });
-});
-
-document.getElementById("withdraw").addEventListener("click", function () {
-    const amount = parseInt(document.getElementById("amount").value);
-    if (!amount || amount <= 0) {
-        alert("Please enter a valid amount.");
-        return;
-    }
-    fetch(`https://${GetParentResourceName()}/withdrawMoney`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ amount }),
-    }).then(() => {
-        document.getElementById("amount").value = 1;
-    });
-});
-
-document.getElementById("close").addEventListener("click", function () {
-    fetch(`https://${GetParentResourceName()}/close`, {
-        method: "POST",
-    });
-});
-
-function setControlsVisible(visible) {
-    const controls = document.getElementById("bankControls");
-    controls.style.display = visible ? "block" : "none";
-}
-
-window.addEventListener("message", function (event) {
-    if (event.data.action === "showControls") {
-        setControlsVisible(true);
-    } else if (event.data.action === "hideControls") {
-        setControlsVisible(false);
-    } else if (event.data.action === "updateCash") {
-        document.getElementById("cash").textContent = `Cash: $${event.data.amount}`;
-    } else if (event.data.action === "updateBank") {
-        document.getElementById("bank").textContent = `Bank: $${event.data.amount}`;
+    if (data.action === "updateHUD") {
+        document.getElementById("hud-cash").textContent = `$${data.cash.toLocaleString()}`;
+        document.getElementById("hud-bank").textContent = `$${data.bank.toLocaleString()}`;
     }
 });

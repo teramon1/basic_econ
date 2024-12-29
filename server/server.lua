@@ -95,27 +95,49 @@ AddEventHandler("playerConnecting", function(name, setReason, deferrals)
 	end
 end)
 
+RegisterNetEvent("requestPlayerMoney")
+AddEventHandler("requestPlayerMoney", function()
+    local src = source
+    local userData = GetUserData(src)
+    if userData then
+        TriggerClientEvent("updateHUD", src, userData.cash, userData.bank)
+    end
+end)
+
+RegisterNetEvent("getPlayerMoney")
+AddEventHandler("getPlayerMoney", function()
+    local src = source
+    local userData = GetUserData(src)
+    if userData then
+        TriggerClientEvent("updateMoneyUI", src, userData.cash, userData.bank)
+    end
+end)
+
 RegisterServerEvent("customDeposit")
 AddEventHandler("customDeposit", function(amount)
     local src = source
-    if RemoveMoney(src, "cash", amount) then
+    local userData = GetUserData(src)
+    if userData and userData.cash >= amount then
+        RemoveMoney(src, "cash", amount)
         AddMoney(src, "bank", amount)
-        TriggerClientEvent("updateClientMoney", src, "cash", GetUserData(src).cash)
-        TriggerClientEvent("updateClientMoney", src, "bank", GetUserData(src).bank)
+        TriggerClientEvent("updateMoneyUI", src, userData.cash - amount, userData.bank + amount)
+        TriggerClientEvent('chatMessage', src, Config.ServerName, {255, 0, 0}, " ^2Deposit successful: $" .. amount)
     else
-        TriggerClientEvent('chatMessage', src, "^1Not enough cash!")
+        TriggerClientEvent('chatMessage', src, Config.ServerName, {255, 0, 0}, " ^1Not enough cash to deposit!")
     end
 end)
 
 RegisterServerEvent("customWithdraw")
 AddEventHandler("customWithdraw", function(amount)
     local src = source
-    if RemoveMoney(src, "bank", amount) then
+    local userData = GetUserData(src)
+    if userData and userData.bank >= amount then
+        RemoveMoney(src, "bank", amount)
         AddMoney(src, "cash", amount)
-        TriggerClientEvent("updateClientMoney", src, "cash", GetUserData(src).cash)
-        TriggerClientEvent("updateClientMoney", src, "bank", GetUserData(src).bank)
+        TriggerClientEvent("updateMoneyUI", src, userData.cash + amount, userData.bank - amount)
+        TriggerClientEvent('chatMessage', src, Config.ServerName, {255, 0, 0}, " ^2Withdrawal successful: $" .. amount)
     else
-        TriggerClientEvent('chatMessage', src, "^1Not enough money in the bank!")
+        TriggerClientEvent('chatMessage', src, Config.ServerName, {255, 0, 0}, " ^1Not enough money in the bank!")
     end
 end)
 
