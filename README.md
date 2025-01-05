@@ -9,6 +9,7 @@ FiveM Economy/Banking storing data via SteamID in JSON format (Which means **no 
 * Cash/Bank
 * Money UI/ Bank GUI
 * Can be restarted live without breaking
+* (Should be easy to integrate to your own scripts/systems if you know how)
 
 ## Commands
 * /bankinfo
