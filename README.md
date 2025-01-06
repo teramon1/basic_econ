@@ -1,4 +1,4 @@
-** I NEED TO FIX AN ISSUE WITH THE UI DISABLEING OTHER HTML/CSS/JS UI ELEMEMNTS FROM TOHER SCRIPTS **
+**I NEED TO FIX AN ISSUE WITH THE UI DISABLEING OTHER HTML/CSS/JS UI ELEMEMNTS FROM TOHER SCRIPTS**
 
 ## Basic Economy
 FiveM Economy/Banking storing data via SteamID in JSON format (Which means **no MySQL or external databases**). Original Creator: https://github.com/CADOJRP/FiveM-Banking
