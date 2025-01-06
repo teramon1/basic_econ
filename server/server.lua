@@ -1,15 +1,5 @@
 local resource = GetCurrentResourceName()
 
-local taxes = {
-    ["income"] = 5.0,  -- 10%
-    ["sales"] = 2.5   -- 7.5%
-}
-
-local govmoney = {
-    ["taxes"] = 0,      -- Money Made Per Resource Run From Taxes (Server Uptime Duration)
-    ["police"] = 0      -- Money Made Per Resource Run From Policing (Server Uptime Duration)
-}
-
 RegisterCommand("bankinfo", function(source, args)
     TriggerClientEvent('chatMessage', source, Config.ServerName, {255, 0, 0}, " ^*^_Bank Commands:")
     TriggerClientEvent('chatMessage', source, "", {255, 0, 0}, " ^2/pay ^7ID Amount")
@@ -150,32 +140,6 @@ function RemoveMoney(user, type, amount)
         return true
     end
     return false
-end
-
-RegisterNetEvent("updateClientTaxesServer")
-AddEventHandler("updateClientTaxesServer", function()
-    TriggerClientEvent("updateClientTaxes", source, taxes)
-end)
-
-exports("GetTaxes", function()
-    return taxes
-end)
-
-RegisterNetEvent("AddGovBalance")
-AddEventHandler("AddGovBalance", function(type, amount)
-    AddGovBalance(type, amount)
-end)
-
-exports("AddGovBalance", function(type, amount)
-    AddGovBalance(type, amount)
-end)
-
-function AddGovBalance(type, amount)
-    if type == "taxes" then
-        govmoney.taxes = govmoney.taxes + amount
-    elseif type == "police" then
-        govmoney.police = govmoney.police + amount
-    end
 end
 
 local resource = GetCurrentResourceName()
