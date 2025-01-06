@@ -4,7 +4,7 @@ FiveM Economy/Banking storing data via SteamID in JSON format (Which means **no 
 ## Features
 * Saves players data into JSON files named after their steamID
 * Admin Pay (Soon)
-* Tax (Broken will fix soon)
+* Tax (TEMP Removed so I can redo it)
 * Automatic Payments
 * Cash/Bank
 * Money UI/ Bank GUI
